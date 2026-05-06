@@ -1,0 +1,200 @@
+{
+  "info": {
+    "name": "Bencina en Línea API",
+    "_postman_id": "bencina-api-v1",
+    "description": "Colección para la API de búsqueda de estaciones de combustible.\nImplementa los 4 casos de búsqueda requeridos en la prueba técnica.\n\nBase URL: http://localhost:8000",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "lat",
+      "value": "-23.65",
+      "description": "Latitud de referencia (ejemplo: Antofagasta)"
+    },
+    {
+      "key": "lng",
+      "value": "-70.40",
+      "description": "Longitud de referencia (ejemplo: Antofagasta)"
+    }
+  ],
+  "item": [
+    {
+      "name": "Infraestructura",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Verifica que la API está en línea."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Caso 1 — Estación más cercana",
+      "item": [
+        {
+          "name": "Estación más cercana (Gasolina 93)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/stations/search?lat={{lat}}&lng={{lng}}&product=93",
+              "host": ["{{base_url}}"],
+              "path": ["api", "stations", "search"],
+              "query": [
+                {"key": "lat", "value": "{{lat}}"},
+                {"key": "lng", "value": "{{lng}}"},
+                {"key": "product", "value": "93"}
+              ]
+            },
+            "description": "Busca la estación más cercana que venda Gasolina 93, sin restricciones adicionales."
+          }
+        },
+        {
+          "name": "Estación más cercana (Diesel)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/stations/search?lat={{lat}}&lng={{lng}}&product=diesel",
+              "host": ["{{base_url}}"],
+              "path": ["api", "stations", "search"],
+              "query": [
+                {"key": "lat", "value": "{{lat}}"},
+                {"key": "lng", "value": "{{lng}}"},
+                {"key": "product", "value": "diesel"}
+              ]
+            },
+            "description": "Misma búsqueda para Petroleo Diesel."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Caso 2 — Más cercana con menor precio",
+      "item": [
+        {
+          "name": "Más cercana con menor precio (Gasolina 93)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/stations/search?lat={{lat}}&lng={{lng}}&product=93&cheapest=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "stations", "search"],
+              "query": [
+                {"key": "lat", "value": "{{lat}}"},
+                {"key": "lng", "value": "{{lng}}"},
+                {"key": "product", "value": "93"},
+                {"key": "cheapest", "value": "true"}
+              ]
+            },
+            "description": "Filtra las estaciones con el precio mínimo de Gasolina 93 y retorna la más cercana entre ellas."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Caso 3 — Más cercana con tienda",
+      "item": [
+        {
+          "name": "Más cercana con tienda (Gasolina 95)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/stations/search?lat={{lat}}&lng={{lng}}&product=95&store=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "stations", "search"],
+              "query": [
+                {"key": "lat", "value": "{{lat}}"},
+                {"key": "lng", "value": "{{lng}}"},
+                {"key": "product", "value": "95"},
+                {"key": "store", "value": "true"}
+              ]
+            },
+            "description": "Busca la estación más cercana que tenga tienda de conveniencia y venda Gasolina 95."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Caso 4 — Más cercana con tienda y menor precio",
+      "item": [
+        {
+          "name": "Con tienda y menor precio (Gasolina 97)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/stations/search?lat={{lat}}&lng={{lng}}&product=97&store=true&cheapest=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "stations", "search"],
+              "query": [
+                {"key": "lat", "value": "{{lat}}"},
+                {"key": "lng", "value": "{{lng}}"},
+                {"key": "product", "value": "97"},
+                {"key": "store", "value": "true"},
+                {"key": "cheapest", "value": "true"}
+              ]
+            },
+            "description": "Busca la estación más cercana que tenga tienda y ofrezca el menor precio de Gasolina 97."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Errores — Validación",
+      "item": [
+        {
+          "name": "Producto inválido → 422",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/stations/search?lat={{lat}}&lng={{lng}}&product=hidrogeno",
+              "host": ["{{base_url}}"],
+              "path": ["api", "stations", "search"],
+              "query": [
+                {"key": "lat", "value": "{{lat}}"},
+                {"key": "lng", "value": "{{lng}}"},
+                {"key": "product", "value": "hidrogeno"}
+              ]
+            },
+            "description": "Producto no reconocido — espera 422 Unprocessable Entity."
+          }
+        },
+        {
+          "name": "Latitud fuera de rango → 422",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/stations/search?lat=999&lng={{lng}}&product=93",
+              "host": ["{{base_url}}"],
+              "path": ["api", "stations", "search"],
+              "query": [
+                {"key": "lat", "value": "999"},
+                {"key": "lng", "value": "{{lng}}"},
+                {"key": "product", "value": "93"}
+              ]
+            },
+            "description": "Latitud fuera del rango [-90, 90] — espera 422."
+          }
+        }
+      ]
+    }
+  ]
+}
